@@ -1,3 +1,25 @@
+# 모든 환경에 공통인 설정
 spring:
   application:
     name: backend
+
+  # 프로필을 지정하지 않고 실행하면 local 프로필 사용 → application-local.yaml 도 함께 로드
+  profiles:
+    default: local
+
+  # backend/.env 를 설정 값으로 읽어온다 (파일이 없어도 에러 없음)
+  config:
+    import: optional:file:.env[.properties]
+
+  jpa:
+    open-in-view: false            # DB 연결을 요청 끝까지 붙잡지 않음 (Service 안에서만 사용)
+    hibernate:
+      ddl-auto: validate           # 테이블은 Flyway 가 만들고, JPA 는 엔티티와 일치하는지 검사만
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC           # 시각을 DB 에 저장/조회할 때 항상 UTC 기준
+
+  threads:
+    virtual:
+      enabled: true                # Java 21 가상 스레드 사용
